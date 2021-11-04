@@ -1,5 +1,5 @@
 from os import name
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 import requests
 from decouple import config
 from pprint import pprint
@@ -16,7 +16,7 @@ def index(request):
     # pprint(content)
     # print(type(content))
 
-    g_city = request.GET.get('name')
+    g_city = request.GET.get('q')
     print('g_city: ', g_city)
     if g_city:
         response = requests.get(url.format(g_city, config('API_KEY')))
@@ -32,6 +32,7 @@ def index(request):
                 messages.success(request, "City succesfully added.")
         else:
             messages.warning(request, "City does not exists.")
+        return redirect('home')
     city_data = []
     for city in cities:
         # print(city)
@@ -51,3 +52,9 @@ def index(request):
         "city_data": city_data,
     }
     return render(request, "weather_app/index.html", context)
+
+
+def delete_city(request, id):
+    city = get_object_or_404(City, id=id)
+    city.delete()
+    return redirect('home')
