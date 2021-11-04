@@ -1,8 +1,10 @@
+from os import name
 from django.shortcuts import render
 import requests
 from decouple import config
 from pprint import pprint
 from .models import City
+from django.contrib import messages
 
 
 def index(request):
@@ -13,6 +15,23 @@ def index(request):
     # content = response.json()
     # pprint(content)
     # print(type(content))
+
+    g_city = request.GET.get('name')
+    print('g_city: ', g_city)
+    if g_city:
+        response = requests.get(url.format(g_city, config('API_KEY')))
+        print(response.status_code)
+        if response.status_code == 200:
+            content = response.json()
+            a_city = content["name"]
+            print(a_city)
+            if City.objects.filter(name=a_city):
+                messages.warning(request, "City already exists.")
+            else:
+                City.objects.create(name=a_city)
+                messages.success(request, "City succesfully added.")
+        else:
+            messages.warning(request, "City does not exists.")
     city_data = []
     for city in cities:
         # print(city)
