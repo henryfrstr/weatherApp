@@ -7,7 +7,7 @@ from .models import City
 
 def index(request):
     cities = City.objects.all()
-    url = "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}"
+    url = "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}&units=metric"
     # city = "istanbul"
     # response = requests.get(url.format(city, config('API_KEY')))
     # content = response.json()
@@ -15,10 +15,10 @@ def index(request):
     # print(type(content))
     city_data = []
     for city in cities:
-        print(city)
+        # print(city)
         response = requests.get(url.format(city, config('API_KEY')))
         content = response.json()
-        pprint(content)
+        # pprint(content)
         data = {
             "city": city,
             "temp": content["main"]["temp"],

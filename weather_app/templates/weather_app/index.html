@@ -9,7 +9,12 @@
 <body>
     <h1>Weather App</h1>
     <br>
-    
+    <form action="">
+        <input name="name">
+        <input type="submit" value="Add">
+    </form>
+
+    <br>
     {% for city in city_data %} <br>
     {{ city.city.name }} <br>
     {{ city.temp }} <br>
